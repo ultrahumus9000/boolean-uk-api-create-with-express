@@ -21,6 +21,7 @@ app.use(express.json());
 /* CATCH-ALL TO TEST ROUTES */
 app.use("/books", bookRouter);
 app.use("/pets", petRouter);
+
 app.get("*", (req, res) => {
   res.json({ ok: true });
 });

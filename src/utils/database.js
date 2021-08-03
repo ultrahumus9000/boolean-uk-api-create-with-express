@@ -1,5 +1,6 @@
-const { Client } = require("pg");
-const dotenv = require("dotenv");
+const { Client } = require("pg"); // get data from ProgresSQL
+
+const dotenv = require("dotenv"); // make the url encrypted
 console.log(dotenv);
 dotenv.config();
 
