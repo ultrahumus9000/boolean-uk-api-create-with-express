@@ -35,7 +35,7 @@ function Pet() {
   }
 
   createTable();
-  mockData();
+  // mockData();
 }
 
 module.exports = Pet;

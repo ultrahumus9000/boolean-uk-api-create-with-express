@@ -36,7 +36,7 @@ function Book() {
   }
 
   createTable();
-  mockData();
+  // mockData();
 }
 
 module.exports = Book;
