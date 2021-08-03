@@ -4,7 +4,6 @@ const { buildBooksDatabase } = require("../../utils/mockData");
 function Book() {
   function createTable() {
     const sql = `
-      
       CREATE TABLE IF NOT EXISTS books (
         id              SERIAL        PRIMARY KEY,
         title           VARCHAR(255)   NOT NULL,
@@ -35,8 +34,64 @@ function Book() {
     });
   }
 
+  function createOneBook(newBook, callback) {
+    const { title, type, author, topic, publicationDate } = newBook;
+    const createOneBook = `
+    INSERT INTO books (title, type, author, topic, publicationDate)
+    VALUES
+      ($1, $2, $3, $4, $5)
+      RETURNING * ;
+    `;
+    db.query(createOneBook, [title, type, author, topic, publicationDate]).then(
+      (result) => {
+        console.log(result.rows);
+        callback(result.rows);
+      }
+    );
+  }
+
+  function findOneBook(bookId, callback) {
+    const findBook = `SELECT * FROM books WHERE id = ($1);`;
+    db.query(findBook, [bookId]).then((result) => callback(result.rows[0]));
+  }
+
+  function deleteOneBook(bookId, callback) {
+    const deleteBook = ` DELETE FROM books WHERE id = ($1);`;
+    db.query(deleteBook, [bookId]).then(() => callback());
+  }
+
+  function findAllBooks(callback) {
+    const findAllSQL = `SELECT * FROM books;`;
+    db.query(findAllSQL).then((result) => {
+      callback(result.rows);
+    });
+  }
+
+  function searchBooks(search, callback) {
+    const searchSQL = `SELECT * FROM books WHERE title LIKE $1 OR type =($1) OR author LIKE $1 OR topic = $1;`;
+    db.query(searchSQL, [`%${search}%`]).then((result) =>
+      callback(result.rows)
+    );
+  }
+
+  function updateBook(bookId, updateContent, callback) {
+    const { title, type, author, topic, publicationDate } = updateContent;
+    let columnArray = [title, type, author, topic, publicationDate];
+    columnArray = columnArray.filter((col) => col !== undefined);
+
+    const updateSQL = `UPDATE books SET //// WHERE id = ($1);`;
+    db.query(updateSQL, []).then((result) => callback(result.rows));
+  }
+
   createTable();
   // mockData();
+  return {
+    createOneBook,
+    findOneBook,
+    findAllBooks,
+    searchBooks,
+    deleteOneBook,
+  };
 }
 
 module.exports = Book;

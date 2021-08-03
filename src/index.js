@@ -9,6 +9,8 @@ const Pet = require("./resources/pets/model");
 
 const app = express();
 
+const bookRouter = require("./resources/books/router");
+const petRouter = require("./resources/pets/router");
 /* SETUP MIDDLEWARE */
 
 app.use(morgan("dev"));
@@ -17,7 +19,8 @@ app.use(express.json());
 /* SETUP ROUTES */
 
 /* CATCH-ALL TO TEST ROUTES */
-
+app.use("/books", bookRouter);
+app.use("/pets", petRouter);
 app.get("*", (req, res) => {
   res.json({ ok: true });
 });
@@ -32,7 +35,6 @@ app.listen(port, () => {
       console.error("[ERROR] Connection error: ", error.stack);
     } else {
       console.log("\n[DB] Connected...\n");
-
       Book();
       Pet();
     }
