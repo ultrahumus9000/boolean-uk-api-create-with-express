@@ -24,7 +24,7 @@ function Pet() {
       INSERT INTO pets
         (name, age, type, breed, microchip)
       VALUES
-        ($1, $2, $3, $4, $5)
+        ($1, $2, $3, $4, $5);
     `;
 
     const pets = buildAnimalDatabase();
@@ -34,8 +34,55 @@ function Pet() {
     });
   }
 
+  async function createOnePet(newPet) {
+    let { name, age, type, breed, microchip } = newPet;
+    const newPetSQL = `INSERT INTO pets
+    (name, age, type, breed, microchip)
+  VALUES
+    ($1, $2, $3, $4, $5)
+     RETURNING *;`;
+    const result = await db.query(newPetSQL, [
+      name,
+      age,
+      type,
+      breed,
+      microchip,
+    ]);
+    return result.rows;
+  }
+  function findOnePet(petId, callback) {
+    const petSQL = `SELECT * FROM pets WHERE id =($1)`;
+    db.query(petSQL, [petId]).then((result) => {
+      callback(result);
+    });
+  }
+
+  function deletePet(petId) {
+    const petSQL = `DELETE FROM pets WHERE id =($1)`;
+    db.query(petSQL, [petId]);
+  }
+
+  function findAllPets(callback) {
+    const allPetsSQL = `SELECT * FROM pets;`;
+    db.query(allPetsSQL)
+      .then((result) => {
+        callback(result.rows);
+      })
+      .catch((error) => console.error(error));
+  }
+
+  function searchPets(search, callback) {
+    const searchSQL = `SELECT * FROM pets WHERE name LIKE $1;`;
+    db.query(searchSQL, [`%${search}%`])
+      .then((result) => {
+        callback(result.rows);
+      })
+      .catch((error) => console.error("error", error));
+  }
+
   createTable();
   // mockData();
+  return { createOnePet, findOnePet, deletePet, findAllPets, searchPets };
 }
 
 module.exports = Pet;

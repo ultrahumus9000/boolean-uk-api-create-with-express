@@ -42,12 +42,12 @@ function Book() {
       ($1, $2, $3, $4, $5)
       RETURNING * ;
     `;
-    db.query(createOneBook, [title, type, author, topic, publicationDate]).then(
-      (result) => {
+    db.query(createOneBook, [title, type, author, topic, publicationDate])
+      .then((result) => {
         console.log(result.rows);
         callback(result.rows);
-      }
-    );
+      })
+      .catch((error) => console.error(error));
   }
 
   function findOneBook(bookId, callback) {
@@ -68,7 +68,7 @@ function Book() {
   }
 
   function searchBooks(search, callback) {
-    const searchSQL = `SELECT * FROM books WHERE title LIKE $1 OR type =($1) OR author LIKE $1 OR topic = $1;`;
+    const searchSQL = `SELECT * FROM books WHERE title LIKE $1 OR type =($1) OR author LIKE $1 OR topic = ($1);`;
     db.query(searchSQL, [`%${search}%`]).then((result) =>
       callback(result.rows)
     );
