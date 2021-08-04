@@ -68,7 +68,7 @@ function Book() {
   }
 
   function searchBooks(search, callback) {
-    const searchSQL = `SELECT * FROM books WHERE title LIKE $1 OR type =($1) OR author LIKE $1 OR topic = ($1);`;
+    const searchSQL = `SELECT * FROM books WHERE title LIKE $1 OR type = $1 OR author LIKE $1 OR topic =$1;`;
     db.query(searchSQL, [`%${search}%`]).then((result) =>
       callback(result.rows)
     );
@@ -76,11 +76,16 @@ function Book() {
 
   function updateBook(bookId, updateContent, callback) {
     const { title, type, author, topic, publicationDate } = updateContent;
-    let columnArray = [title, type, author, topic, publicationDate];
-    columnArray = columnArray.filter((col) => col !== undefined);
 
-    const updateSQL = `UPDATE books SET //// WHERE id = ($1);`;
-    db.query(updateSQL, []).then((result) => callback(result.rows));
+    const updateSQL = `UPDATE books SET title=$2,type=$3,author=$4,topic=$5,publicationDate=$6 WHERE id = ($1);`;
+    db.query(updateSQL, [
+      bookId,
+      title,
+      type,
+      author,
+      topic,
+      publicationDate,
+    ]).then((result) => callback(result.rows));
   }
 
   createTable();
@@ -91,6 +96,7 @@ function Book() {
     findAllBooks,
     searchBooks,
     deleteOneBook,
+    updateBook,
   };
 }
 

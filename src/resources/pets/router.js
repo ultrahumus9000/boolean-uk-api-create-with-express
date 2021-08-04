@@ -21,7 +21,7 @@ petRouter.get("/search", (req, res) => {
   } else {
     searchPets(searchData, (result) => {
       res.json(result);
-    });
+    }).catch((error) => res.json(error));
   }
 });
 

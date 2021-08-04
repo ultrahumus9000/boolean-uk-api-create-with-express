@@ -1,23 +1,14 @@
 const express = require("express");
-const book = require("./model");
-
-const { createOneBook, findOneBook, findAllBooks, searchBooks, deleteOneBook } =
-  book();
-
 const bookRouter = express.Router();
 
-bookRouter.get("/", (req, res) => {
-  let searchRequest = req.query.search;
-  if (searchRequest) {
-    searchBooks(searchRequest, (searchInfo) => {
-      res.json(searchInfo);
-    });
-  } else {
-    findAllBooks((allBooks) => {
-      res.json({ books: allBooks });
-    });
-  }
-});
+const {
+  getAllBooksDB,
+  getOneBooksDB,
+  postOneBooksDB,
+  updateOneBooksDB,
+} = require("./controller");
+
+bookRouter.get("/", getAllBooksDB);
 
 bookRouter.get("/:id", (req, res) => {
   let bookId = Number(req.params.id);

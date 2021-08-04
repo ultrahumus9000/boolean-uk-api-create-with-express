@@ -73,7 +73,8 @@ function Pet() {
 
   function searchPets(search, callback) {
     const searchSQL = `SELECT * FROM pets WHERE name LIKE $1;`;
-    db.query(searchSQL, [`%${search}%`])
+    return db
+      .query(searchSQL, [`%${search}%`])
       .then((result) => {
         callback(result.rows);
       })
