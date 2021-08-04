@@ -6,29 +6,17 @@ const {
   getOneBooksDB,
   postOneBooksDB,
   updateOneBooksDB,
+  deleteOneBookDB,
 } = require("./controller");
 
 bookRouter.get("/", getAllBooksDB);
 
-bookRouter.get("/:id", (req, res) => {
-  let bookId = Number(req.params.id);
-  findOneBook(bookId, (book) => {
-    res.json({ book });
-  });
-});
+bookRouter.get("/:id", getOneBooksDB);
 
-bookRouter.post("/", (req, res) => {
-  const newBook = req.body;
-  createOneBook(newBook, (book) => {
-    res.json(book);
-  });
-});
+bookRouter.post("/", postOneBooksDB);
 
-bookRouter.delete("/:id", (req, res) => {
-  let bookId = Number(req.params.id);
-  deleteOneBook(bookId, () => {
-    res.json(`book infomation is deleted`);
-  });
-});
+bookRouter.delete("/:id", deleteOneBookDB);
+
+bookRouter.patch("/:id", updateOneBooksDB);
 
 module.exports = bookRouter;

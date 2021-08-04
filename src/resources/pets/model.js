@@ -35,19 +35,12 @@ function Pet() {
   }
 
   async function createOnePet(newPet) {
-    let { name, age, type, breed, microchip } = newPet;
     const newPetSQL = `INSERT INTO pets
     (name, age, type, breed, microchip)
   VALUES
     ($1, $2, $3, $4, $5)
      RETURNING *;`;
-    const result = await db.query(newPetSQL, [
-      name,
-      age,
-      type,
-      breed,
-      microchip,
-    ]);
+    const result = await db.query(newPetSQL, Object.keys(newPet));
     return result.rows;
   }
   function findOnePet(petId, callback) {
@@ -81,9 +74,27 @@ function Pet() {
       .catch((error) => console.error("error", error));
   }
 
+  async function updateOnePet(updateId, updateContent) {
+    const updateSQL = `UPDATE pets SET name = $1 WHERE id = $2 RETURNING *;`;
+    const result = await db.query(updateSQL, [updateContent.name, updateId]);
+
+    try {
+      return result.rows[0];
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   createTable();
   // mockData();
-  return { createOnePet, findOnePet, deletePet, findAllPets, searchPets };
+  return {
+    createOnePet,
+    findOnePet,
+    deletePet,
+    findAllPets,
+    searchPets,
+    updateOnePet,
+  };
 }
 
 module.exports = Pet;

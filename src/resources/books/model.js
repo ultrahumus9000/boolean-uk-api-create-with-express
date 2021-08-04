@@ -75,17 +75,12 @@ function Book() {
   }
 
   function updateBook(bookId, updateContent, callback) {
+    console.log("updateContent", updateContent);
     const { title, type, author, topic, publicationDate } = updateContent;
-
-    const updateSQL = `UPDATE books SET title=$2,type=$3,author=$4,topic=$5,publicationDate=$6 WHERE id = ($1);`;
-    db.query(updateSQL, [
-      bookId,
-      title,
-      type,
-      author,
-      topic,
-      publicationDate,
-    ]).then((result) => callback(result.rows));
+    const updateSQL = `UPDATE books SET title=$2,type=$3,author=$4,topic=$5,publicationDate=$6 WHERE id = $1 RETURNING *;`;
+    db.query(updateSQL, [bookId, title, type, author, topic, publicationDate])
+      .then((result) => callback(result.rows))
+      .catch(console.error);
   }
 
   createTable();

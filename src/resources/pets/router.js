@@ -3,7 +3,14 @@ const express = require("express");
 const petRouter = express.Router();
 const Pet = require("../pets/model");
 
-const { createOnePet, findOnePet, deletePet, findAllPets, searchPets } = Pet();
+const {
+  createOnePet,
+  findOnePet,
+  deletePet,
+  findAllPets,
+  searchPets,
+  updateOnePet,
+} = Pet();
 
 petRouter.get("/", (req, res) => {
   findAllPets((allPets) => {
@@ -38,6 +45,15 @@ petRouter.post("/", (req, res) =>
 petRouter.delete("/:id", (req, res) => {
   deletePet(Number(req.params.id)).then(() => {
     res.json("deleted");
+  });
+});
+
+petRouter.patch("/:id", (req, res) => {
+  let updateId = Number(req.params.id);
+  updateOnePet(updateId, res.body).then(() => {
+    findOnePet(updateId, (onePet) => {
+      res.json(onePet);
+    });
   });
 });
 
