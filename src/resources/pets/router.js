@@ -50,7 +50,8 @@ petRouter.delete("/:id", (req, res) => {
 
 petRouter.patch("/:id", (req, res) => {
   let updateId = Number(req.params.id);
-  updateOnePet(updateId, res.body).then(() => {
+  console.log("body", req.body);
+  updateOnePet(updateId, req.body).then(() => {
     findOnePet(updateId, (onePet) => {
       res.json(onePet);
     });

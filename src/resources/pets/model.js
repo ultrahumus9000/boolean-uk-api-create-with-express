@@ -46,7 +46,7 @@ function Pet() {
   function findOnePet(petId, callback) {
     const petSQL = `SELECT * FROM pets WHERE id =($1)`;
     db.query(petSQL, [petId]).then((result) => {
-      callback(result);
+      callback(result.rows);
     });
   }
 
@@ -75,6 +75,7 @@ function Pet() {
   }
 
   async function updateOnePet(updateId, updateContent) {
+    console.log("line 78", updateContent);
     const updateSQL = `UPDATE pets SET name = $1 WHERE id = $2 RETURNING *;`;
     const result = await db.query(updateSQL, [updateContent.name, updateId]);
 
