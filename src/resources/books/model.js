@@ -80,12 +80,12 @@ function Book() {
     const { title, type, author, topic, publicationDate } = updateContent;
     const updateSQL = `UPDATE books SET title=$2,type=$3,author=$4,topic=$5,publicationDate=$6 WHERE id = $1 RETURNING *;`;
     db.query(updateSQL, [bookId, title, type, author, topic, publicationDate])
-      .then((result) => callback(result.rows))
+      .then((result) => callback(result.rows[0]))
       .catch(console.error);
   }
 
   createTable();
-  // mockData();
+  mockData();
   return {
     createOneBook,
     findOneBook,
@@ -97,3 +97,6 @@ function Book() {
 }
 
 module.exports = Book;
+
+// api could be built by us but we might not be the one who build the front end therefore we must have handling error code
+// can put error in callback function by giving 2 paramters
