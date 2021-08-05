@@ -4,6 +4,7 @@ const { buildBooksDatabase } = require("../../utils/mockData");
 function Book() {
   function createTable() {
     const sql = `
+      DROP TABLE IF EXISTS pets;
       CREATE TABLE IF NOT EXISTS books (
         id              SERIAL        PRIMARY KEY,
         title           VARCHAR(255)   NOT NULL,
