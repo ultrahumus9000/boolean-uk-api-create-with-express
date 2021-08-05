@@ -77,8 +77,16 @@ function Pet() {
 
   async function updateOnePet(updateId, updateContent) {
     console.log("line 78", updateContent);
-    const updateSQL = `UPDATE pets SET name = $1 WHERE id = $2 RETURNING *;`;
-    const result = await db.query(updateSQL, [updateContent.name, updateId]);
+    const { name, age, type, breed, microchip } = updateContent;
+    const updateSQL = `UPDATE pets SET name = $1,age = $2, type = $3, breed = $4, microchip =$5 WHERE id = $6 RETURNING *;`;
+    const result = await db.query(updateSQL, [
+      name,
+      age,
+      type,
+      breed,
+      microchip,
+      updateId,
+    ]);
 
     try {
       return result.rows[0];
